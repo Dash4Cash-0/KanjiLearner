@@ -25,6 +25,9 @@ public class GUI extends JFrame {
 
         cardPanel.add(loginPanel(), "Login");
         cardPanel.add(registerPanel(), "Register");
+        cardPanel.add(welcomePanel(), "Welcome");
+        cardPanel.add(beginnerPanel(), "Beginner");
+        cardPanel.add(basicPanel(), "Basic");
 
         frame.add(cardPanel);
         frame.setBackground(new Color(68,84,76));
@@ -75,14 +78,65 @@ public class GUI extends JFrame {
         return login;
     }
 
+    public JPanel welcomePanel(){
+        JPanel welcome = new JPanel(new BorderLayout());
+        JPanel header = new JPanel();
+        JPanel logout = new JPanel();
+        JPanel kanjiLevels = new JPanel();
+        JButton studyBeginner = new JButton("Study");
+        JButton studyBasic = new JButton("Study");
+        ImageIcon n5 = new ImageIcon("src/n5.png");
+        Image image = n5.getImage();
+        Image scaleImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon scaledImage = new ImageIcon(scaleImage);
+
+        ImageIcon n4 = new ImageIcon("src/n4.png");
+        Image image2 = n4.getImage();
+        Image scaleImage2 = image2.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon scaledImage2 = new ImageIcon(scaleImage2);
+
+        JLabel headerText = new JLabel("漢字 Learner");
+        JLabel beginnerImg = new JLabel(scaledImage);
+        JLabel beginner = new JLabel("          Beginner          ");
+        JLabel basicImg = new JLabel(scaledImage2);
+        JLabel basic = new JLabel("          Basic                ");
+
+
+
+        headerText.setFont(new Font("Serif", Font.BOLD, 25));
+
+        welcome.add(header, BorderLayout.NORTH);
+        welcome.add(kanjiLevels, BorderLayout.CENTER);
+        welcome.add(logout, BorderLayout.SOUTH);
+        kanjiLevels.add(beginnerImg);
+        kanjiLevels.add(beginner);
+        kanjiLevels.add(studyBeginner);
+        kanjiLevels.add(basicImg);
+        kanjiLevels.add(basic);
+        kanjiLevels.add(studyBasic);
+        logout.add(backButton("Log Out"));
+        header.add(headerText);
+
+        studyBeginner.addActionListener((ActionEvent e) -> {
+            switchPanel("Beginner");
+        });
+        studyBasic.addActionListener((ActionEvent e) -> {
+            switchPanel("Basic");
+        });
+
+        return welcome;
+    }
+
     public JPanel registerPanel(){
         JPanel panel = new JPanel(new BorderLayout());
         JPanel userInfo = new JPanel();
         JPanel buttons = new JPanel();
         JLabel userName = new JLabel("Username: ");
         JLabel password = new JLabel("Password: ");
+        JLabel email = new JLabel("Email: ");
         JTextField user = new JTextField(30);
-        JTextField pass = new JTextField(30);
+        JPasswordField pass = new JPasswordField(30);
+        JTextField emailField = new JTextField(30);
         JButton signUp = new JButton("Sign up");
         panel.add(userInfo, BorderLayout.CENTER);
         panel.add(buttons, BorderLayout.SOUTH);
@@ -90,16 +144,42 @@ public class GUI extends JFrame {
         userInfo.add(user);
         userInfo.add(password);
         userInfo.add(pass);
+        userInfo.add(email);
+        userInfo.add(emailField);
         buttons.add(signUp);
-        buttons.add(backButton());
+        buttons.add(backButton("Back"));
         setPreviousPanel("Login");
+
+        signUp.addActionListener((ActionEvent e) -> {
+            JOptionPane.showMessageDialog(null,"You have successfully registered and " +
+                                                                        "can now log into your account!");
+            switchPanel("Login");
+        });
+
+        return panel;
+    }
+
+    public JPanel beginnerPanel(){
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel back = new JPanel();
+
+        panel.add(back, BorderLayout.SOUTH);
+
+
+        return panel;
+    }
+    public JPanel basicPanel(){
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel back = new JPanel();
+
+        panel.add(back, BorderLayout.SOUTH);
 
         return panel;
     }
 
 
-    public JButton backButton(){
-        JButton backButton = new JButton("Back");
+    public JButton backButton(String button){
+        JButton backButton = new JButton(button);
         backButton.addActionListener((ActionEvent e) -> {
             cardLayout.show(cardPanel, getPreviousPanel());
         });
