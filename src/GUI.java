@@ -85,6 +85,7 @@ public class GUI extends JFrame {
         JPanel kanjiLevels = new JPanel();
         JButton studyBeginner = new JButton("Study");
         JButton studyBasic = new JButton("Study");
+        JButton logoutButton = new JButton("Log out");
         ImageIcon n5 = new ImageIcon("src/n5.png");
         Image image = n5.getImage();
         Image scaleImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -114,8 +115,9 @@ public class GUI extends JFrame {
         kanjiLevels.add(basicImg);
         kanjiLevels.add(basic);
         kanjiLevels.add(studyBasic);
-        logout.add(backButton("Log Out"));
         header.add(headerText);
+        logout.add(logoutButton);
+
 
         studyBeginner.addActionListener((ActionEvent e) -> {
             switchPanel("Beginner");
@@ -123,6 +125,15 @@ public class GUI extends JFrame {
         studyBasic.addActionListener((ActionEvent e) -> {
             switchPanel("Basic");
         });
+        logoutButton.addActionListener((ActionEvent e) -> {
+            if(e.getSource() == logoutButton){
+                int exit = JOptionPane.showConfirmDialog(null,"Do you want to log out?", "Logout", JOptionPane.YES_NO_OPTION);
+                if(exit == JOptionPane.YES_OPTION){
+                    switchPanel("Login");
+                }
+            }
+        });
+
 
         return welcome;
     }
@@ -164,6 +175,8 @@ public class GUI extends JFrame {
         JPanel back = new JPanel();
 
         panel.add(back, BorderLayout.SOUTH);
+        back.add(backButton("Back"));
+        setPreviousPanel("Welcome");
 
 
         return panel;
@@ -173,6 +186,8 @@ public class GUI extends JFrame {
         JPanel back = new JPanel();
 
         panel.add(back, BorderLayout.SOUTH);
+        back.add(backButton("Back"));
+        setPreviousPanel("Welcome");
 
         return panel;
     }
