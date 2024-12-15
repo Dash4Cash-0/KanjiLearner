@@ -11,6 +11,7 @@ public class GUI extends JFrame {
     private final JTextField userNameField = new JTextField();
     private final JLabel passwordLabel = new JLabel("Password:");
     private final JPasswordField passwordField = new JPasswordField();
+    private CardDatabase database;
 
 
     public GUI(){
@@ -172,10 +173,29 @@ public class GUI extends JFrame {
 
     public JPanel beginnerPanel(){
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel back = new JPanel();
+        JPanel center = new JPanel(new GridLayout(10,3));
+        JPanel backButton = new JPanel();
+        int setNo = 1;
+        int amountOfKanjiInLevel = 80;
+        int kanjiCountInSet = 10;
+        for (int i = 0; i < 10; i++){
+            JLabel set = new JLabel("Set: " + setNo);
+            JLabel kanjisInSet = new JLabel("Amount: " + kanjiCountInSet);
+            JButton setButton = new JButton("Study set ");
+            center.add(set);
+            center.add(setButton);
+            center.add(kanjisInSet);
+            setNo++;
+            amountOfKanjiInLevel -= kanjiCountInSet;
+            if(kanjiCountInSet > amountOfKanjiInLevel){
+                kanjiCountInSet = amountOfKanjiInLevel;
+            }
+        }
 
-        panel.add(back, BorderLayout.SOUTH);
-        back.add(backButton("Back"));
+
+        panel.add(center, BorderLayout.CENTER);
+        panel.add(backButton, BorderLayout.SOUTH);
+        backButton.add(backButton("Back"));
         setPreviousPanel("Welcome");
 
 
@@ -183,13 +203,40 @@ public class GUI extends JFrame {
     }
     public JPanel basicPanel(){
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel back = new JPanel();
+        JPanel center = new JPanel();
+        JPanel backButton = new JPanel();
 
-        panel.add(back, BorderLayout.SOUTH);
-        back.add(backButton("Back"));
+
+        panel.add(backButton, BorderLayout.SOUTH);
+        backButton.add(backButton("Back"));
         setPreviousPanel("Welcome");
 
         return panel;
+    }
+    public JPanel cardFront(){
+        database = new CardDatabase();
+        JPanel frontOfCard = new JPanel(new BorderLayout());
+        JPanel center = new JPanel();
+        JLabel kanji = new JLabel(database.printFront());
+        kanji.setFont(new Font("Serif", Font.BOLD, 40));
+        frontOfCard.add(center, BorderLayout.CENTER);
+        center.add(kanji);
+
+        return frontOfCard;
+    }
+
+    public JPanel cardBack(){
+        database = new CardDatabase();
+        JPanel backOfCard = new JPanel(new BorderLayout());
+        JPanel center = new JPanel();
+        JLabel onyomi = new JLabel(database.printOn());
+        JLabel kunyomi = new JLabel(database.printKun());
+        JLabel meaning = new JLabel(database.printMeaning());
+        backOfCard.add(center, BorderLayout.CENTER);
+        center.add(onyomi);
+        center.add(kunyomi);
+        center.add(meaning);
+        return backOfCard;
     }
 
 

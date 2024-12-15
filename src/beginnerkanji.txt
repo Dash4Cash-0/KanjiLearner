@@ -1,0 +1,16 @@
+Kanji: 日
+Onyomi: ニチ、ジツ
+Kunyomi:　ひ、か
+Meaning: day, sun, Japan, counter for days
+
+Kanji: 一
+Onyomi:　イチ、イツ　
+Kunyomi:　ひと、ひとつ
+Meaning:　one
+
+Kanji: 国
+Onyomi:　コク
+Kunyomi:　くに
+Meaning:　country
+
+
