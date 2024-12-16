@@ -1,8 +1,8 @@
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GUI extends JFrame {
 
@@ -14,6 +14,8 @@ public class GUI extends JFrame {
     private final JLabel passwordLabel = new JLabel("Password:");
     private final JPasswordField passwordField = new JPasswordField();
     private CardDatabase database;
+    private Level currentLevel;
+    private AtomicInteger kanjiCounter;
 
 
     public GUI(){
@@ -177,6 +179,7 @@ public class GUI extends JFrame {
 
     public JPanel beginnerPanel(){
         database = new CardDatabase();
+        setCurrentLevel(Level.BEGINNER);
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
@@ -232,11 +235,12 @@ public class GUI extends JFrame {
 
 
     public JPanel cardFront(){
-
+        ArrayList<FlashCard> current = database.getList(currentLevel);
+        kanjiCounter = new AtomicInteger();
         JPanel frontOfCard = new JPanel(new BorderLayout());
         JPanel bottom = new JPanel();
         JPanel center = new JPanel();
-        JLabel kanji = new JLabel(database.printFront());
+        JLabel kanji = new JLabel(current.get(kanjiCounter.get()).getFront());
         JButton nextCard = new JButton("Next Card");
         JButton backCard = new JButton("Show answer");
         kanji.setFont(new Font("Serif", Font.BOLD, 40));
@@ -250,24 +254,30 @@ public class GUI extends JFrame {
 
         backCard.addActionListener((ActionEvent e) -> {
             switchPanel("Card Back");
+
         });
         nextCard.addActionListener((ActionEvent e) -> {
-
+            if(e.getSource() == nextCard){
+                kanjiCounter.getAndIncrement();
+                kanji.setText(current.get(kanjiCounter.get()).getFront());
+                frontOfCard.updateUI();
+            }
         });
-
 
         return frontOfCard;
     }
 
     public JPanel cardBack(){
+        ArrayList<FlashCard> current = database.getList(currentLevel);
         database = new CardDatabase();
+        int currentKanji = getKanjiCounter().get();
         JPanel backOfCard = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
         JPanel bottom = new JPanel();
         JButton showFront = new JButton("Front of card");
-        JLabel onyomi = new JLabel(database.printOn());
-        JLabel kunyomi = new JLabel(database.printKun());
-        JLabel meaning = new JLabel(database.printMeaning());
+        JLabel onyomi = new JLabel(current.get(currentKanji).getBack()[0]);
+        JLabel kunyomi = new JLabel(current.get(currentKanji).getBack()[1]);
+        JLabel meaning = new JLabel(current.get(currentKanji).getBack()[2]);
         backOfCard.add(center, BorderLayout.CENTER);
         center.add(onyomi);
         center.add(kunyomi);
@@ -318,5 +328,14 @@ public class GUI extends JFrame {
     }
     public JLabel getUserNameLabel(){
         return userNameLabel;
+    }
+    public Level getCurrentLevel(){
+        return currentLevel;
+    }
+    public void setCurrentLevel(Level currentLevel){
+        this.currentLevel = currentLevel;
+    }
+    public AtomicInteger getKanjiCounter(){
+        return kanjiCounter;
     }
 }
