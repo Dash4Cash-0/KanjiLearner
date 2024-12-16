@@ -29,6 +29,8 @@ public class GUI extends JFrame {
         cardPanel.add(welcomePanel(), "Welcome");
         cardPanel.add(beginnerPanel(), "Beginner");
         cardPanel.add(basicPanel(), "Basic");
+        cardPanel.add(cardFront(),"Card Front");
+        cardPanel.add(cardBack(),"Card Back");
 
         frame.add(cardPanel);
         frame.setBackground(new Color(68,84,76));
@@ -172,31 +174,42 @@ public class GUI extends JFrame {
     }
 
     public JPanel beginnerPanel(){
+        database = new CardDatabase();
+
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
+        JButton goBack = new JButton("Back");
         int setNo = 1;
-        int amountOfKanjiInLevel = 80;
-        int kanjiCountInSet = 10;
-        for (int i = 0; i < 10; i++){
+        int kanjiCountInSet = database.getBeginner().size();
+        for (int i = 0; i < 8; i++){
             JLabel set = new JLabel("Set: " + setNo);
-            JLabel kanjisInSet = new JLabel("Amount: " + kanjiCountInSet);
+            JLabel kanjisInSet = new JLabel("         " +kanjiCountInSet + " Kanji");
+
             JButton setButton = new JButton("Study set ");
             center.add(set);
             center.add(setButton);
             center.add(kanjisInSet);
             setNo++;
-            amountOfKanjiInLevel -= kanjiCountInSet;
-            if(kanjiCountInSet > amountOfKanjiInLevel){
-                kanjiCountInSet = amountOfKanjiInLevel;
+            int finalKanjiCountInSet = kanjiCountInSet;
+            setButton.addActionListener((ActionEvent e) -> {
+               if(e.getSource() == setButton){
+                   if(finalKanjiCountInSet > 0){
+                       switchPanel("Card Front");
+                   }
+               }
+            });
+            if(kanjiCountInSet < 10){
+                kanjiCountInSet = 0;
             }
         }
 
-
         panel.add(center, BorderLayout.CENTER);
         panel.add(backButton, BorderLayout.SOUTH);
-        backButton.add(backButton("Back"));
-        setPreviousPanel("Welcome");
+        backButton.add(goBack);
+        goBack.addActionListener((ActionEvent e) -> {
+            switchPanel("Welcome");
+        });
 
 
         return panel;
@@ -216,11 +229,24 @@ public class GUI extends JFrame {
     public JPanel cardFront(){
         database = new CardDatabase();
         JPanel frontOfCard = new JPanel(new BorderLayout());
+        JPanel bottom = new JPanel();
         JPanel center = new JPanel();
         JLabel kanji = new JLabel(database.printFront());
+        JButton nextCard = new JButton("Next Card");
+        JButton backCard = new JButton("Show answer");
         kanji.setFont(new Font("Serif", Font.BOLD, 40));
         frontOfCard.add(center, BorderLayout.CENTER);
+        frontOfCard.add(bottom, BorderLayout.SOUTH);
         center.add(kanji);
+        setPreviousPanel("Beginner");
+        bottom.add(nextCard);
+        bottom.add(backCard);
+        bottom.add(backButton("Back"));
+
+        backCard.addActionListener((ActionEvent e) -> {
+            switchPanel("Card Back");
+        });
+
 
         return frontOfCard;
     }
@@ -229,6 +255,8 @@ public class GUI extends JFrame {
         database = new CardDatabase();
         JPanel backOfCard = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
+        JPanel bottom = new JPanel();
+        JButton showFront = new JButton("Front of card");
         JLabel onyomi = new JLabel(database.printOn());
         JLabel kunyomi = new JLabel(database.printKun());
         JLabel meaning = new JLabel(database.printMeaning());
@@ -236,6 +264,13 @@ public class GUI extends JFrame {
         center.add(onyomi);
         center.add(kunyomi);
         center.add(meaning);
+        backOfCard.add(bottom, BorderLayout.SOUTH);
+        bottom.add(showFront);
+
+        showFront.addActionListener((ActionEvent e) -> {
+            switchPanel("Card Front");
+        });
+
         return backOfCard;
     }
 
