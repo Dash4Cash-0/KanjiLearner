@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
+
 public class CardDatabase implements CardInterface {
 
     private ArrayList<FlashCard> beginner;
     private ArrayList<FlashCard> basic;
+    private Level level;
 
     public CardDatabase() {
         beginner = new ArrayList<>();
@@ -17,23 +19,37 @@ public class CardDatabase implements CardInterface {
 
     }
 
-    public ArrayList<FlashCard> getBasic() {
-        return basic;
-    }
-    public ArrayList<FlashCard> getBeginner() {
-        return beginner;
-    }
-
-    @Override
-    public String printFront() {
-        for(FlashCard c : beginner) {
-            return c.getFront();
+    public ArrayList<FlashCard> getList(Level level) {
+        this.level = level;
+        if(level == Level.BEGINNER) {
+            return beginner;
+        }else if(level == Level.BASIC) {
+            return basic;
         }
         return null;
     }
 
+
+    public Level getLevel() {
+        return level;
+    }
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    @Override
+    public String printFront() {
+        String front = "";
+        for(FlashCard c : beginner) {
+            front = c.getFront();
+            System.out.println(front);
+        }
+        return front;
+    }
+
     @Override
     public String printOn() {
+
         return beginner.get(0).getBack()[0];
     }
 

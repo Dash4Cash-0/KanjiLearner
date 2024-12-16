@@ -1,6 +1,8 @@
+import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
@@ -175,13 +177,12 @@ public class GUI extends JFrame {
 
     public JPanel beginnerPanel(){
         database = new CardDatabase();
-
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
         JButton goBack = new JButton("Back");
         int setNo = 1;
-        int kanjiCountInSet = database.getBeginner().size();
+        int kanjiCountInSet = database.getList(Level.BEGINNER).size();
         for (int i = 0; i < 8; i++){
             JLabel set = new JLabel("Set: " + setNo);
             JLabel kanjisInSet = new JLabel("         " +kanjiCountInSet + " Kanji");
@@ -214,6 +215,8 @@ public class GUI extends JFrame {
 
         return panel;
     }
+
+
     public JPanel basicPanel(){
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
@@ -226,8 +229,10 @@ public class GUI extends JFrame {
 
         return panel;
     }
+
+
     public JPanel cardFront(){
-        database = new CardDatabase();
+
         JPanel frontOfCard = new JPanel(new BorderLayout());
         JPanel bottom = new JPanel();
         JPanel center = new JPanel();
@@ -245,6 +250,9 @@ public class GUI extends JFrame {
 
         backCard.addActionListener((ActionEvent e) -> {
             switchPanel("Card Back");
+        });
+        nextCard.addActionListener((ActionEvent e) -> {
+
         });
 
 
