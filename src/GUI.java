@@ -262,20 +262,6 @@ public class GUI extends JFrame {
     }
 
 
-//    public JPanel basicPanel(){
-//        JPanel panel = new JPanel(new BorderLayout());
-//        JPanel center = new JPanel();
-//        JPanel backButton = new JPanel();
-//
-//
-//        panel.add(backButton, BorderLayout.SOUTH);
-//        backButton.add(backButton("Back"));
-//        setPreviousPanel("Welcome");
-//
-//        return panel;
-//    }
-
-
     public JPanel cardFront(){
         ArrayList<FlashCard> current = database.getList(currentLevel);
         kanjiCounter = new AtomicInteger();
