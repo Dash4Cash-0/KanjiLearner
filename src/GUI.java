@@ -22,8 +22,6 @@ public class GUI extends JFrame {
         init();
     }
 
-
-
     public void init(){
 
         JFrame frame = new JFrame();
@@ -221,19 +219,61 @@ public class GUI extends JFrame {
         return panel;
     }
 
-
     public JPanel basicPanel(){
+        database = new CardDatabase();
+        setCurrentLevel(Level.BASIC);
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel center = new JPanel();
+        JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
+        JButton goBack = new JButton("Back");
+        int setNo = 1;
+        int kanjiCountInSet = database.getList(Level.BASIC).size();
+        for (int i = 0; i < 8; i++){
+            JLabel set = new JLabel("Set: " + setNo);
+            JLabel kanjisInSet = new JLabel("         " +kanjiCountInSet + " Kanji");
 
+            JButton setButton = new JButton("Study set ");
+            center.add(set);
+            center.add(setButton);
+            center.add(kanjisInSet);
+            setNo++;
+            int finalKanjiCountInSet = kanjiCountInSet;
+            setButton.addActionListener((ActionEvent e) -> {
+                if(e.getSource() == setButton){
+                    if(finalKanjiCountInSet > 0){
+                        switchPanel("Card Front");
+                    }
+                }
+            });
+            if(kanjiCountInSet < 10){
+                kanjiCountInSet = 0;
+            }
+        }
 
+        panel.add(center, BorderLayout.CENTER);
         panel.add(backButton, BorderLayout.SOUTH);
-        backButton.add(backButton("Back"));
-        setPreviousPanel("Welcome");
+        backButton.add(goBack);
+        goBack.addActionListener((ActionEvent e) -> {
+            switchPanel("Welcome");
+        });
+
 
         return panel;
     }
+
+
+//    public JPanel basicPanel(){
+//        JPanel panel = new JPanel(new BorderLayout());
+//        JPanel center = new JPanel();
+//        JPanel backButton = new JPanel();
+//
+//
+//        panel.add(backButton, BorderLayout.SOUTH);
+//        backButton.add(backButton("Back"));
+//        setPreviousPanel("Welcome");
+//
+//        return panel;
+//    }
 
 
     public JPanel cardFront(){
