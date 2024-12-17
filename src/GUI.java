@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GUI extends JFrame {
-
+    private static GUI gui;
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private String previousPanel;
@@ -18,9 +18,11 @@ public class GUI extends JFrame {
     private AtomicInteger kanjiCounter;
 
 
-    public GUI(){
+    private GUI(){
         init();
     }
+
+
 
     public void init(){
 
@@ -346,5 +348,11 @@ public class GUI extends JFrame {
     }
     public AtomicInteger getKanjiCounter(){
         return kanjiCounter;
+    }
+    public static GUI getInstance(){
+        if(gui == null){
+            gui = new GUI();
+        }
+        return gui;
     }
 }
