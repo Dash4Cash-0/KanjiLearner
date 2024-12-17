@@ -242,7 +242,7 @@ public class GUI extends JFrame {
         JPanel center = new JPanel();
         JLabel kanji = new JLabel(current.get(kanjiCounter.get()).getFront());
         JButton nextCard = new JButton("Next Card");
-        JButton backCard = new JButton("Show answer");
+        JButton backCard = new JButton("Back of card");
         kanji.setFont(new Font("Serif", Font.BOLD, 40));
         frontOfCard.add(center, BorderLayout.CENTER);
         frontOfCard.add(bottom, BorderLayout.SOUTH);
@@ -270,23 +270,32 @@ public class GUI extends JFrame {
     public JPanel cardBack(){
         ArrayList<FlashCard> current = database.getList(currentLevel);
         database = new CardDatabase();
-        int currentKanji = getKanjiCounter().get();
         JPanel backOfCard = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
         JPanel bottom = new JPanel();
         JButton showFront = new JButton("Front of card");
-        JLabel onyomi = new JLabel(current.get(currentKanji).getBack()[0]);
-        JLabel kunyomi = new JLabel(current.get(currentKanji).getBack()[1]);
-        JLabel meaning = new JLabel(current.get(currentKanji).getBack()[2]);
+        JButton showAnswer = new JButton("Show Answer");
+        JLabel onyomi = new JLabel();
+        JLabel kunyomi = new JLabel();
+        JLabel meaning = new JLabel();
         backOfCard.add(center, BorderLayout.CENTER);
         center.add(onyomi);
         center.add(kunyomi);
         center.add(meaning);
         backOfCard.add(bottom, BorderLayout.SOUTH);
         bottom.add(showFront);
+        bottom.add(showAnswer);
 
         showFront.addActionListener((ActionEvent e) -> {
             switchPanel("Card Front");
+        });
+        showAnswer.addActionListener((ActionEvent e) -> {
+            if(e.getSource() == showAnswer){
+                onyomi.setText(current.get(getKanjiCounter().get()).getBack()[0]);
+                kunyomi.setText(current.get(getKanjiCounter().get()).getBack()[1]);
+                meaning.setText(current.get(getKanjiCounter().get()).getBack()[2]);
+                backOfCard.updateUI();
+            }
         });
 
         return backOfCard;
