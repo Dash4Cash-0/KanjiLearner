@@ -36,6 +36,7 @@ public class GUI extends JFrame {
         cardPanel.add(cardFront(),"Card Front");
         cardPanel.add(cardBack(),"Card Back");
 
+
         frame.add(cardPanel);
         frame.setBackground(new Color(68,84,76));
         frame.setSize(300,400);
@@ -43,10 +44,19 @@ public class GUI extends JFrame {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
         cardLayout.show(cardPanel, "Login");
+        setLevel();
     }
 
     public void switchPanel(String panel){
         cardLayout.show(cardPanel, panel);
+    }
+
+    public void setLevel(){
+        if(beginnerPanel().isEnabled()){
+            setCurrentLevel(Level.BEGINNER);
+        }else if(basicPanel().isEnabled()){
+            setCurrentLevel(Level.BASIC);
+        }
     }
 
 
@@ -81,6 +91,7 @@ public class GUI extends JFrame {
         registerButton.addActionListener((ActionEvent e) -> {
             switchPanel("Register");
         });
+        setLevel();
 
         return login;
     }
@@ -179,7 +190,6 @@ public class GUI extends JFrame {
 
     public JPanel beginnerPanel(){
         database = new CardDatabase();
-        setCurrentLevel(Level.BEGINNER);
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
@@ -189,7 +199,6 @@ public class GUI extends JFrame {
         for (int i = 0; i < 8; i++){
             JLabel set = new JLabel("Set: " + setNo);
             JLabel kanjisInSet = new JLabel("         " +kanjiCountInSet + " Kanji");
-
             JButton setButton = new JButton("Study set ");
             center.add(set);
             center.add(setButton);
@@ -221,7 +230,6 @@ public class GUI extends JFrame {
 
     public JPanel basicPanel(){
         database = new CardDatabase();
-        setCurrentLevel(Level.BASIC);
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
@@ -231,7 +239,6 @@ public class GUI extends JFrame {
         for (int i = 0; i < 8; i++){
             JLabel set = new JLabel("Set: " + setNo);
             JLabel kanjisInSet = new JLabel("         " +kanjiCountInSet + " Kanji");
-
             JButton setButton = new JButton("Study set ");
             center.add(set);
             center.add(setButton);
@@ -263,7 +270,8 @@ public class GUI extends JFrame {
 
 
     public JPanel cardFront(){
-        ArrayList<FlashCard> current = database.getList(currentLevel);
+        ArrayList<FlashCard> current = database.getList(getCurrentLevel());
+        System.out.println(getCurrentLevel());
         kanjiCounter = new AtomicInteger();
         JPanel frontOfCard = new JPanel(new BorderLayout());
         JPanel bottom = new JPanel();
@@ -296,7 +304,7 @@ public class GUI extends JFrame {
     }
 
     public JPanel cardBack(){
-        ArrayList<FlashCard> current = database.getList(currentLevel);
+        ArrayList<FlashCard> current = database.getList(getCurrentLevel());
         database = new CardDatabase();
         JPanel backOfCard = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
