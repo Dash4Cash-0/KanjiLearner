@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GUI extends JFrame {
@@ -16,6 +17,7 @@ public class GUI extends JFrame {
     private CardDatabase database;
     private Level currentLevel;
     private AtomicInteger kanjiCounter;
+    private boolean isBeginner;
 
 
     private GUI(){
@@ -44,19 +46,11 @@ public class GUI extends JFrame {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
         cardLayout.show(cardPanel, "Login");
-        setLevel();
+
     }
 
     public void switchPanel(String panel){
         cardLayout.show(cardPanel, panel);
-    }
-
-    public void setLevel(){
-        if(beginnerPanel().isEnabled()){
-            setCurrentLevel(Level.BEGINNER);
-        }else if(basicPanel().isEnabled()){
-            setCurrentLevel(Level.BASIC);
-        }
     }
 
 
@@ -91,7 +85,6 @@ public class GUI extends JFrame {
         registerButton.addActionListener((ActionEvent e) -> {
             switchPanel("Register");
         });
-        setLevel();
 
         return login;
     }
@@ -119,8 +112,6 @@ public class GUI extends JFrame {
         JLabel beginner = new JLabel("          Beginner          ");
         JLabel basicImg = new JLabel(scaledImage2);
         JLabel basic = new JLabel("          Basic                ");
-
-
 
         headerText.setFont(new Font("Serif", Font.BOLD, 25));
 
@@ -157,6 +148,8 @@ public class GUI extends JFrame {
     }
 
     public JPanel registerPanel(){
+        CreateUser newUser = new CreateUser();
+        UserDatabase userDatabase = new UserDatabase();
         JPanel panel = new JPanel(new BorderLayout());
         JPanel userInfo = new JPanel();
         JPanel buttons = new JPanel();
@@ -180,9 +173,17 @@ public class GUI extends JFrame {
         setPreviousPanel("Login");
 
         signUp.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(null,"You have successfully registered and " +
-                                                                        "can now log into your account!");
-            switchPanel("Login");
+            if(user.getText().isEmpty() || pass.getPassword() == null || email.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"You cant leave fields empty");
+            }else{
+                newUser.createUserName(user.getText()).createPassword(Arrays.toString(pass.getPassword())).createEmail(emailField.getText());
+                userDatabase.addUser(newUser);
+                JOptionPane.showMessageDialog(null,"You have successfully registered and " +
+                        "can now log into your account!");
+                switchPanel("Login");
+            }
+
+
         });
 
         return panel;
@@ -190,6 +191,7 @@ public class GUI extends JFrame {
 
     public JPanel beginnerPanel(){
         database = new CardDatabase();
+        setCurrentLevel(Level.BEGINNER);
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
@@ -220,6 +222,7 @@ public class GUI extends JFrame {
         panel.add(center, BorderLayout.CENTER);
         panel.add(backButton, BorderLayout.SOUTH);
         backButton.add(goBack);
+        panel.updateUI();
         goBack.addActionListener((ActionEvent e) -> {
             switchPanel("Welcome");
         });
@@ -230,6 +233,7 @@ public class GUI extends JFrame {
 
     public JPanel basicPanel(){
         database = new CardDatabase();
+        setCurrentLevel(Level.BASIC);
         JPanel panel = new JPanel(new BorderLayout());
         JPanel center = new JPanel(new GridLayout(10,3));
         JPanel backButton = new JPanel();
@@ -260,6 +264,7 @@ public class GUI extends JFrame {
         panel.add(center, BorderLayout.CENTER);
         panel.add(backButton, BorderLayout.SOUTH);
         backButton.add(goBack);
+        panel.updateUI();
         goBack.addActionListener((ActionEvent e) -> {
             switchPanel("Welcome");
         });
@@ -271,7 +276,6 @@ public class GUI extends JFrame {
 
     public JPanel cardFront(){
         ArrayList<FlashCard> current = database.getList(getCurrentLevel());
-        System.out.println(getCurrentLevel());
         kanjiCounter = new AtomicInteger();
         JPanel frontOfCard = new JPanel(new BorderLayout());
         JPanel bottom = new JPanel();
@@ -287,6 +291,7 @@ public class GUI extends JFrame {
         bottom.add(nextCard);
         bottom.add(backCard);
         bottom.add(backButton("Back"));
+
 
         backCard.addActionListener((ActionEvent e) -> {
             switchPanel("Card Back");
@@ -383,6 +388,7 @@ public class GUI extends JFrame {
     public AtomicInteger getKanjiCounter(){
         return kanjiCounter;
     }
+
     public static GUI getInstance(){
         if(gui == null){
             gui = new GUI();
