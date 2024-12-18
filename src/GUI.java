@@ -13,11 +13,10 @@ public class GUI extends JFrame {
     private final JLabel userNameLabel = new JLabel("User Name:");
     private final JTextField userNameField = new JTextField();
     private final JLabel passwordLabel = new JLabel("Password:");
-    private final JPasswordField passwordField = new JPasswordField();
+    private final JTextField passwordField = new JTextField();
     private CardDatabase database;
     private Level currentLevel;
     private AtomicInteger kanjiCounter;
-    private boolean isBeginner;
 
 
     private GUI(){
@@ -55,6 +54,7 @@ public class GUI extends JFrame {
 
 
     public JPanel loginPanel(){
+        UserDatabase userDatabase = new UserDatabase();
         JPanel login = new JPanel(new BorderLayout());
         JPanel userPassPanel = new JPanel();
         JPanel loginRegisterPanel = new JPanel();
@@ -80,7 +80,15 @@ public class GUI extends JFrame {
 
 
         loginButton.addActionListener((ActionEvent e) -> {
-            switchPanel("Welcome");
+            if(e.getSource() == loginButton){
+                for(User user : userDatabase.getUsers()){
+                    if(user.getUserName().equals(userNameField.getText())){
+                        switchPanel("Welcome");
+                    }
+                }
+                JOptionPane.showMessageDialog(null,"Wrong username or password!");
+            }
+
         });
         registerButton.addActionListener((ActionEvent e) -> {
             switchPanel("Register");
@@ -157,7 +165,7 @@ public class GUI extends JFrame {
         JLabel password = new JLabel("Password: ");
         JLabel email = new JLabel("Email: ");
         JTextField user = new JTextField(30);
-        JPasswordField pass = new JPasswordField(30);
+        JTextField pass = new JTextField(30);
         JTextField emailField = new JTextField(30);
         JButton signUp = new JButton("Sign up");
         panel.add(userInfo, BorderLayout.CENTER);
@@ -173,18 +181,23 @@ public class GUI extends JFrame {
         setPreviousPanel("Login");
 
         signUp.addActionListener((ActionEvent e) -> {
-            if(user.getText().isEmpty() || pass.getPassword() == null || email.getText().isEmpty()){
+            if(user.getText().isEmpty() || pass.getText() == null || email.getText().isEmpty()){
                 JOptionPane.showMessageDialog(null,"You cant leave fields empty");
             }else{
-                newUser.createUserName(user.getText()).createPassword(Arrays.toString(pass.getPassword())).createEmail(emailField.getText());
-                userDatabase.addUser(newUser);
+                newUser.createUserName(user.getText()).createPassword(pass.getText()).createEmail(emailField.getText());
+                userDatabase.addUser(newUser.create());
+                for(User c : userDatabase.getUsers()){
+                    System.out.println(c.getUserName());
+                    System.out.println(c.getEmail());
+                    System.out.println(c.getEmail());
+                }
                 JOptionPane.showMessageDialog(null,"You have successfully registered and " +
                         "can now log into your account!");
                 switchPanel("Login");
             }
-
-
         });
+
+
 
         return panel;
     }
@@ -370,7 +383,7 @@ public class GUI extends JFrame {
     public JTextField getUserNameField(){
         return userNameField;
     }
-    public JPasswordField getPasswordField(){
+    public JTextField getPasswordField(){
         return passwordField;
     }
     public JLabel getPasswordLabel(){
