@@ -208,7 +208,6 @@ public class GUI extends JFrame {
             }else{
                 newUser.createUserName(user.getText()).createPassword(pass.getText()).createEmail(emailField.getText());
                 userDatabase.addUser(newUser.create());
-                System.out.println(newUser.create().getUserName());
                 JOptionPane.showMessageDialog(null,"You have successfully registered and " +
                         "can now log into your account!");
                 switchPanel("Login");
@@ -338,7 +337,7 @@ public class GUI extends JFrame {
     }
 
     public JPanel cardBack(){
-        ArrayList<FlashCard> current = database.getList(getCurrentLevel());
+        current = database.getList(getCurrentLevel());
         database = new CardDatabase();
         JPanel backOfCard = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
